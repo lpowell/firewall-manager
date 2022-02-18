@@ -19,7 +19,7 @@ function RollCall(){
 		#[io.file]::WriteAllBytes($x,$file)
 	#	if(select-object Name ){
 	#		echo "found AD"
-		}
+	#	}
 		# convert internal format return to string
 		
 		# Build an array of all ports needed 
