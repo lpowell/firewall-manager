@@ -24,6 +24,7 @@ function RollCall(){
 	$RoleCheck =@("DNS","AD","DHCP")
 	
 	foreach($x in $RoleCheck){$Roles = (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x})}
+	echo $Roles
 	
 	
 	
