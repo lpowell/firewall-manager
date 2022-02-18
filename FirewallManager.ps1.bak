@@ -19,7 +19,12 @@ function RollCall(){
 	#Returns strings that match the "phrase", e.g. DNS will return DNS and RSAT-DNA-Server
 	#create a rolecheck array and loop this?
 	
-	$Roles = (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match "phrase"}
+	
+	
+	$RoleCheck =@("DNS","AD","DHCP")
+	
+	%($x in $RoleCheck){$Roles = (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}}
+	
 	
 	
 	
