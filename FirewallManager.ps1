@@ -28,7 +28,7 @@ function RollCall(){
 	$DHCP =@()
 	
 	
-	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x{Firewallinit($x)}})}
+	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x} | Firewallinit($x)}
 	#foreach($x in $Roles){#add ports or function call here | if it matches AD,DNS,DHCP, ETC, pass that to firewallinit and initialize the rules
 	
 	
