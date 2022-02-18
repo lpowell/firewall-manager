@@ -11,9 +11,11 @@
 function RollCall(){
 	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name)
 	foreach($x in $Roles){
-		if(select-string -Path $x -Pattern "AD"){
+		if(select-string -Path {out-string -InputObject $x -Width 100} -Pattern "AD"){
 			echo "found AD"
 		}
+		# convert internal format return to string
+		
 		# Build an array of all ports needed 
 		# construct a separate array off all other ports
 		# disable rules for array 2 and allow rules for array 1
