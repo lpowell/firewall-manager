@@ -13,7 +13,22 @@ function RollCall(){
 	#New-Item -Path $env:UserProfile\Documents\FirewallManager -ItemType Directory
 	#$file =[io.file]::ReadAllBytes('c:\$env:UserProfile\Documents\FirewallManager\tmp_roles.dat')
 	#$Roles = (Get-WindowsFeature | where Installed | %{if($_.Name -eq 'AD-Domain-Services'){echo 'AD Found'}})
-	$Roles = (Get-WindowsFeature | where Installed | Select-Object Name | %{if($_.Name -match "AD-Domain-Services"){echo 'found'}})
+	#$Roles = (Get-WindowsFeature | where Installed | %{if($_.Name -match "AD-Domain-Services"){echo 'found'}})
+	
+	
+	#Returns strings that match the "phrase", e.g. DNS will return DNS and RSAT-DNA-Server
+	#create a rolecheck array and loop this?
+	
+	
+	
+	$RoleCheck =@("DNS","AD","DHCP")
+	
+	%($x in $RoleCheck){$Roles = (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}}
+	
+	
+	
+	
+	
 	#foreach($x in $Roles){
 		#$y = (out-string -InputObject $x -Width 100)
 		#doesn't work lol
