@@ -12,7 +12,7 @@ function RollCall(){
 	#tmp binary file to store roles, deleted after array is created
 	#New-Item -Path $env:UserProfile\Documents\FirewallManager -ItemType Directory
 	#$file =[io.file]::ReadAllBytes('c:\$env:UserProfile\Documents\FirewallManager\tmp_roles.dat')
-	$Roles = (Get-WindowsFeature | where Installed | %{if($_ -match "AD-Domain-Services"){echo 'AD Found'}})
+	$Roles = (Get-WindowsFeature | where Installed | %{if($_ -eq "AD-Domain-Services"){echo 'AD Found'}})
 	#foreach($x in $Roles){
 		#$y = (out-string -InputObject $x -Width 100)
 		#doesn't work lol
