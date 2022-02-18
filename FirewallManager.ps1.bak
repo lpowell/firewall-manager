@@ -12,9 +12,9 @@ function RollCall(){
 	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name)
 	foreach($x in $Roles){
 		$y = (out-string -InputObject $x -Width 100)
-		if(select-string -Path $y -Pattern "AD"){
-			echo "found AD"
-		}
+		#if(select-string -Path $y -Pattern "AD"){
+		#	echo "found AD"
+		#}
 		# convert internal format return to string
 		
 		# Build an array of all ports needed 
@@ -22,7 +22,7 @@ function RollCall(){
 		# disable rules for array 2 and allow rules for array 1
 		# don't forget UDP
 		
-		echo $x
+		echo $y
 	}
 }
 # Scan and assess the server for installed roles and services
