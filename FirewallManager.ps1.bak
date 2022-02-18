@@ -10,8 +10,8 @@
 
 function RollCall(){
 	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name)
-	foreach($x in $Roles){
-		if(select-string -Path {out-string -InputObject $x -Width 100} -Pattern "AD"){
+	foreach(out-string -InputObject $x -Width 100 in $Roles){
+		if(select-string -Path $x -Pattern "AD"){
 			echo "found AD"
 		}
 		# convert internal format return to string
