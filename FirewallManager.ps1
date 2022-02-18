@@ -17,14 +17,19 @@ function RollCall(){
 	
 	
 	#Returns strings that match the "phrase", e.g. DNS will return DNS and RSAT-DNA-Server
-	#create a rolecheck array and loop this?
+	#create a rolecheck array and loop this
+	#create firewall port number arrays -- pass roles to firewallinit instead?
 	
 	
 	
 	$RoleCheck =@("DNS","AD","DHCP")
+	$AD =@()
+	$DNS =@()
+	$DHCP =@()
+	
 	
 	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x})}
-	echo $Roles
+	foreach($x in $Roles){
 	
 	
 	
