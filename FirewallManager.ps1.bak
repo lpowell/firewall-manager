@@ -13,7 +13,7 @@ function RollCall(){
 	#New-Item -Path $env:UserProfile\Documents\FirewallManager -ItemType Directory
 	#$file =[io.file]::ReadAllBytes('c:\$env:UserProfile\Documents\FirewallManager\tmp_roles.dat')
 	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name |
-	 out-string -InputObject $_ -Width 100)
+	 out-string -stream)
 	foreach($x in $Roles){
 		#$y = (out-string -InputObject $x -Width 100)
 		#doesn't work lol
