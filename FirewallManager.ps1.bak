@@ -9,7 +9,7 @@
 #############################################################
 
 function RollCall(){
-	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name)
+	$Roles = (Get-WindowsFeature | where-object {$_. installstate -eq "installed"} | Format-List Name | foreach {$_.Name -as [string]})
 	foreach($x in $Roles){
 		echo $x
 	}
