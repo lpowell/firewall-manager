@@ -28,12 +28,14 @@ function RollCall(){
 	$DHCP =@()
 	
 	
-	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x})	FirewallInit($x)}
+	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}) 
+		FirewallInit($x)}
+	
+	
+	
+	
+	
 	#foreach($x in $Roles){#add ports or function call here | if it matches AD,DNS,DHCP, ETC, pass that to firewallinit and initialize the rules
-	
-	
-	
-	
 	
 	#foreach($x in $Roles){
 		#$y = (out-string -InputObject $x -Width 100)
@@ -60,9 +62,24 @@ function Documentation(){
 # Create the output information
 
 function FirewallInit($Role){
-	echo $Role
+	Set-NetFirewallProfile -Enabled True
+	#Enable firewall
+	(New-Object -ComObject HNetCfg.FwPolicy2).RestoreLocalFirewallDefaults()
+	#Reset to defaults
+	$AD =@('88','389','464')
+	$DHCP =@()
+	$DNS =@('53')
+	#ports to open based on service install
 	
-}
+	switch($Role){
+		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $AD" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DHCP'{foreach($x in $DHCP){New-NetFirewallrule -DisplayName "DHCP Port $DHCP" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DNS'{foreach($x in $DNS){New-NetFirewallrule -DisplayName "DNS Port $DNS" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+	}
+	#Create allow rules for the installed services
+	
+	
+	
 # Initialize the firewall rules 
 
 function LogManager(){
