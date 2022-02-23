@@ -29,7 +29,7 @@ function RollCall(){
 	
 	
 	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}) 
-		FirewallInit($x)}
+		FirewallRoles($x)}
 	
 	
 	
@@ -60,16 +60,7 @@ function Documentation(){
 	
 }
 # Create the output information
-
-function FirewallInit($Role){
-	echo $Role
-	#test
-	
-	Set-NetFirewallProfile -Enabled True
-	#Enable firewall
-	
-	(New-Object -ComObject HNetCfg.FwPolicy2).RestoreLocalFirewallDefaults()
-	#Reset to defaults
+function FirewallRoles($Role){
 	
 	$AD =@('88','389','464')
 	$DHCP =@()
@@ -85,6 +76,14 @@ function FirewallInit($Role){
 	}
 	#Create allow rules for the installed services
 	
+}
+function FirewallInit(){	
+	Set-NetFirewallProfile -Enabled True
+	#Enable firewall
+	
+	(New-Object -ComObject HNetCfg.FwPolicy2).RestoreLocalFirewallDefaults()
+	#Reset to defaults
+	
 	$BasicRules =@('80','443')
 	foreach($x in $BasicRules){New-NetFirewallrule -DisplayName "Basic Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}
 	#Create Basic rules for all devices
@@ -96,9 +95,13 @@ function FirewallInit($Role){
 	#examine notes for updated ranges
 	
 	foreach($x in $SecurityBlocks){New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
-								   New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block}
+								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
+								   New-NetFirewallrule -DisplayName "Block Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Block
+								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Block}
 	foreach($x in $SecRangeBlocks){New-NetFirewallrule -DisplayName "Block Range $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
-								   New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block}
+								   New-NetFirewallrule -DisplayName "Block Range $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
+								   New-NetFirewallrule -DisplayName "Block Range $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Block
+								   New-NetFirewallrule -DisplayName "Block Range $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Block}
 	
 # Initialize the firewall rules 
 }
@@ -111,5 +114,5 @@ function EventMonitor(){
 	
 }
 # Parse through event logs for suspicious activity
-
+FirewallInit
 RollCall
