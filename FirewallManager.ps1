@@ -92,9 +92,11 @@ function FirewallInit($Role){
 	$SecRangeBlocks =@('1-52','54-79','81-87','89-388','390-442','444-463','465-8079','8081-49151')
 	#examine notes for updated ranges
 	
+	foreach($x in $SecurityBlocks){New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block}
+	foreach($x in $SecRangeBlocks){New-NetFirewallrule -DisplayName "Block Range $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block}
 	
 # Initialize the firewall rules 
-
+}
 function LogManager(){
 	
 }

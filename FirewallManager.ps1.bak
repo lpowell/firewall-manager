@@ -64,8 +64,10 @@ function Documentation(){
 function FirewallInit($Role){
 	Set-NetFirewallProfile -Enabled True
 	#Enable firewall
+	
 	(New-Object -ComObject HNetCfg.FwPolicy2).RestoreLocalFirewallDefaults()
 	#Reset to defaults
+	
 	$AD =@('88','389','464')
 	$DHCP =@()
 	$DNS =@('53')
@@ -80,10 +82,16 @@ function FirewallInit($Role){
 	}
 	#Create allow rules for the installed services
 	
-	################################
+	$BasicRules =@('80','443')
+	foreach($x in $BasicRules){New-NetFirewallrule -DisplayName "Basic Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}
 	#Create Basic rules for all devices
 	#Inbound not outbound
 	#80, 8080, 443, 
+	
+	$SecurityBlocks =@('445','3389','22','5300')
+	$SecRangeBlocks =@('1-52','54-79','81-87','89-388','390-442','444-463','465-8079','8081-49151')
+	#examine notes for updated ranges
+	
 	
 # Initialize the firewall rules 
 
