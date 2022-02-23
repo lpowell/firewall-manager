@@ -62,7 +62,7 @@ function Documentation(){
 # Create the output information
 function FirewallRoles($Role){
 	
-	$AD =@('88','389','464')
+	$AD =@('88','389','464','3269')
 	$DHCP =@('647')
 	$DHCPUDP =@('67','547','647','847')
 	$DNS =@('53')
@@ -97,11 +97,10 @@ function FirewallInit(){
 	$BasicRules =@('80','443')
 	$BasicRulesUDP =@('123')
 	foreach($x in $BasicRules){New-NetFirewallrule -DisplayName "Basic Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow}
-	foreach($x in $BasicRulesUDP){New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}
-
-
+	foreach($x in $BasicRulesUDP){New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow
+								  New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow}
 	#Create Basic rules for all devices
-	#Inbound not outbound
+	#outbound not inbound
 	#80, 8080, 443, 
 	
 	$SecurityBlocks =@('445','3389','22','5300')

@@ -23,9 +23,7 @@ function RollCall(){
 	
 	
 	$RoleCheck =@("DNS","AD","DHCP")
-	$AD =@()
-	$DNS =@()
-	$DHCP =@()
+
 	
 	
 	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}) 
@@ -62,7 +60,7 @@ function Documentation(){
 # Create the output information
 function FirewallRoles($Role){
 	
-	$AD =@('88','389','464')
+	$AD =@('88','389','464','3269')
 	$DHCP =@('647')
 	$DHCPUDP =@('67','547','647','847')
 	$DNS =@('53')
@@ -97,7 +95,8 @@ function FirewallInit(){
 	$BasicRules =@('80','443')
 	$BasicRulesUDP =@('123')
 	foreach($x in $BasicRules){New-NetFirewallrule -DisplayName "Basic Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow}
-	foreach($x in $BasicRulesUDP){New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}
+	foreach($x in $BasicRulesUDP){New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow
+								  New-NetFirewallrule -DisplayName "Basic Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow}
 	#Create Basic rules for all devices
 	#outbound not inbound
 	#80, 8080, 443, 
