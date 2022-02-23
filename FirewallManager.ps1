@@ -64,20 +64,33 @@ function Documentation(){
 function FirewallInit($Role){
 	Set-NetFirewallProfile -Enabled True
 	#Enable firewall
+	
 	(New-Object -ComObject HNetCfg.FwPolicy2).RestoreLocalFirewallDefaults()
 	#Reset to defaults
+	
 	$AD =@('88','389','464')
 	$DHCP =@()
 	$DNS =@('53')
+	$Exchange =@()
+	$Ftp =@()
 	#ports to open based on service install
 	
 	switch($Role){
-		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $AD" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
-		'DHCP'{foreach($x in $DHCP){New-NetFirewallrule -DisplayName "DHCP Port $DHCP" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
-		'DNS'{foreach($x in $DNS){New-NetFirewallrule -DisplayName "DNS Port $DNS" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DHCP'{foreach($x in $DHCP){New-NetFirewallrule -DisplayName "DHCP Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DNS'{foreach($x in $DNS){New-NetFirewallrule -DisplayName "DNS Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
 	}
 	#Create allow rules for the installed services
 	
+	$BasicRules =@('80','443')
+	foreach($x in $BasicRules){New-NetFirewallrule -DisplayName "Basic Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}
+	#Create Basic rules for all devices
+	#Inbound not outbound
+	#80, 8080, 443, 
+	
+	$SecurityBlocks =@('445','3389','22','5300')
+	$SecRangeBlocks =@('1-52','54-79','81-87','89-388','390-442','444-463','465-8079','8081-49151')
+	#examine notes for updated ranges
 	
 	
 # Initialize the firewall rules 

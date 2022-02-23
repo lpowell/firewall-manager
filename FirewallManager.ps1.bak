@@ -69,14 +69,21 @@ function FirewallInit($Role){
 	$AD =@('88','389','464')
 	$DHCP =@()
 	$DNS =@('53')
+	$Exchange =@()
+	$Ftp =@()
 	#ports to open based on service install
 	
 	switch($Role){
-		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $AD" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
-		'DHCP'{foreach($x in $DHCP){New-NetFirewallrule -DisplayName "DHCP Port $DHCP" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
-		'DNS'{foreach($x in $DNS){New-NetFirewallrule -DisplayName "DNS Port $DNS" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DHCP'{foreach($x in $DHCP){New-NetFirewallrule -DisplayName "DHCP Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
+		'DNS'{foreach($x in $DNS){New-NetFirewallrule -DisplayName "DNS Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow}}
 	}
+	#Create allow rules for the installed services
 	
+	################################
+	#Create Basic rules for all devices
+	#Inbound not outbound
+	#80, 8080, 443, 
 	
 # Initialize the firewall rules 
 
