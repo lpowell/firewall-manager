@@ -23,9 +23,7 @@ function RollCall(){
 	
 	
 	$RoleCheck =@("DNS","AD","DHCP")
-	$AD =@()
-	$DNS =@()
-	$DHCP =@()
+
 	
 	
 	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}) 
@@ -66,7 +64,7 @@ function FirewallRoles($Role){
 	$DHCP =@('647')
 	$DHCPUDP =@('67','547','647','847')
 	$DNS =@('53')
-	$Exchange =@()
+	$Exchange =@('143','993','110','995','587',)
 	$Ftp =@()
 	#ports to open based on service install
 	
@@ -104,7 +102,7 @@ function FirewallInit(){
 	#80, 8080, 443, 
 	
 	$SecurityBlocks =@('445','3389','22','5300')
-	$SecRangeBlocks =@('1-52','54-79','81-87','89-122','124-388','390-442','444-463','465-8079','8081-49151')
+	$SecRangeBlocks =@('1-52','54-66','68-79','81-87','89-109','111-122','124-142','144-388','390-442','444-463','465-546','548-586','588-646','648-846','848-992','993-994','996-3268','3270-8079','8081-49151')
 	#examine notes for updated ranges
 	
 	foreach($x in $SecurityBlocks){New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
