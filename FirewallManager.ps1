@@ -64,7 +64,7 @@ function FirewallRoles($Role){
 	$DHCP =@('647')
 	$DHCPUDP =@('67','547','647','847')
 	$DNS =@('53')
-	$Exchange =@('143','993','110','995','587',)
+	$Exchange =@('143','993','110','995','587')
 	$Ftp =@()
 	#ports to open based on service install
 	
