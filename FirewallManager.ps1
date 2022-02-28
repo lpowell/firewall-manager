@@ -27,14 +27,17 @@ function RollCall(){
 
 	
 	
-	foreach($x in $RoleCheck){if(Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}){FirewallRoles($x)}}
+	foreach($x in $RoleCheck){if(Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}){FirewallRoles($x);if($x -eq 'AD'){$AD=$true}}}
 	#Pass installed roles to firewall creator
+	#added condi for separating DC for device in domain
+
 
 	if(get-service | select-object Name, Status | %{$_.Name -match 'MSExchangeServiceHost'}){FirewallRoles('Exchange')}
 	#If true, create exchange rules
 	
-	if((gwmi win32_computersystem).partofdomain -eq $true){FirewallRoles('AD')}
+	if(-Not $AD){if((gwmi win32_computersystem).partofdomain -eq $true){FirewallRoles('AD')}}
 	#If the device is part of a domain, create the AD rules to allow communication
+	#should only check if the device is not a DC
 	
 	
 	
