@@ -27,8 +27,7 @@ function RollCall(){
 
 	
 	
-	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}) 
-		FirewallRoles($x)}
+	foreach($x in $RoleCheck){$Roles += (Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x});FirewallRoles($x);if(get-service | select-object Name, Status | %{$_.Name -match 'MSExchange'}){FirewallRoles('Exchange'))}}
 	
 	
 	
@@ -82,6 +81,10 @@ function FirewallRoles($Role){
 								  New-NetFirewallrule -DisplayName "DNS Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
 								  New-NetFirewallrule -DisplayName "DNS Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow
 								  New-NetFirewallrule -DisplayName "DNS Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
+		'Exchange'{foreach($x in $Exchange){New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow
+											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
+											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow
+											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
 	}
 	#Create allow rules for the installed services
 	
