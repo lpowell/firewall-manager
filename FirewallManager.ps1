@@ -111,8 +111,9 @@ function FirewallInit(){
 	#80, 8080, 443, 
 	
 	$SecurityBlocks =@('3389','22','5300')
-	$SecRangeBlocks =@('1-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','993-994','996-3267','3270-8079','8081-49151')
+	$SecRangeBlocks =@('1-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','993-994','996-1023','5001-8079','8081-49151')
 	#examine notes for updated ranges
+	#1024-5000 must be open for endpoint <-> domain connection
 	
 	foreach($x in $SecurityBlocks){New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
