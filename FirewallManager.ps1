@@ -27,7 +27,7 @@ function RollCall(){
 
 	
 	
-	foreach($x in $RoleCheck){FirewallRoles((Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}))}
+	foreach($x in $RoleCheck){if(Get-WindowsFeature | where Installed | %{out-string -InputObject $_.Name} | ?{$_ -match $x}){FirewallRoles($x)}}
 	#Pass installed roles to firewall creator
 
 	if(get-service | select-object Name, Status | %{$_.Name -match 'MSExchangeServiceHost'}){FirewallRoles('Exchange')}
