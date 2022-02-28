@@ -1,11 +1,11 @@
 #############################################################
-# Firewall Manager for Windows Servers						#
-# 															#
-# Creates and manages firewall rules for Windows Servers	#
-#															#
-#															#
-# Author: Liam Powell										#
-# Created on behalf of the Metropolitan CCDC Team			#
+# Firewall Manager for Windows Servers			    #
+# 							    #
+# Creates and manages firewall rules for Windows Servers    #
+#							    #
+#							    #
+# Author: Liam Powell					    #
+# Created on behalf of the Metropolitan CCDC Team	    #
 #############################################################
 
 function RollCall(){
