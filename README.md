@@ -12,6 +12,8 @@ Finish adding all the roles that can be installed on windows servers.
 
 Add more service checks and create a modular system for expanding the services that are checked (mirror rolecheck).
 
+Restrict RPC ports to a predefined range, allowing for more secure rule creation.
+
 Cleanup the range blocks and create a more elegant solution that can block unused role ports (e.g. if no AD connection or installation, block the AD ports).
 
 Log readers and monitors for suspicious traffic/connections.
