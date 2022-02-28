@@ -32,7 +32,7 @@ function RollCall(){
 	#added condi for separating DC for device in domain
 
 
-	if(get-service | select-object Name, Status | %{$_.Name -match 'MSExchangeServiceHost'}){FirewallRoles('Exchange')}
+	if((get-service | select-object Name, Status | %{$_.Name -match 'MSExchangeServiceHost'}) -eq 'True'){FirewallRoles('Exchange')}
 	#If true, create exchange rules
 	
 	if(-Not $AD){if((gwmi win32_computersystem).partofdomain -eq $true){FirewallRoles('AD')}}
