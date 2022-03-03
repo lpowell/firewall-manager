@@ -34,7 +34,7 @@ function FirewallRoles($Role){
 	$DHCP =@('647')
 	$DHCPUDP =@('67','547','647','847')
 	$DNS =@('53')
-	$Exchange =@('143','993','110','995','587')
+	$Exchange =@('25','143','993','110','995','587')
 	$Ftp =@()
 	#ports to open based on service install
 	
@@ -76,7 +76,7 @@ function FirewallInit(){
 
 	
 	$SecurityBlocks =@('3389','22','5300')
-	$SecRangeBlocks =@('1-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','993-994','996-1023','8081-49151')
+	$SecRangeBlocks =@('1-24','26-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','993-994','996-1023','8081-49151')
 	foreach($x in $SecurityBlocks){New-NetFirewallrule -DisplayName "Block Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Block
