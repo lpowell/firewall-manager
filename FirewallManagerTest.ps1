@@ -22,7 +22,7 @@ function RollCall(){
 	
 	
 	
-	$RoleCheck =@("DNS","AD","DHCP")
+	$RoleCheck =@("DNS","AD","DHCP","IIS")
 	#correlates to $role switch
 
 	
@@ -74,8 +74,11 @@ function FirewallRoles($Role){
 	$DNS =@('53')
 	$Exchange =@('25','143','993','110','995','587')
 	$Ftp =@()
+	$IIS =@('80','443','444','81','135')
 	#ports to open based on service install
 	
+
+
 	switch($Role){
 		'AD'{foreach($x in $AD){New-NetFirewallrule -DisplayName "AD Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow
 								New-NetFirewallrule -DisplayName "AD Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
@@ -90,12 +93,17 @@ function FirewallRoles($Role){
 								  New-NetFirewallrule -DisplayName "DNS Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow
 								  New-NetFirewallrule -DisplayName "DNS Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
 		'Exchange'{foreach($x in $Exchange){New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow
-											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
+											New-NetFirewallrule -DisplayName "Exchange Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
 											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow
-											New-NetFirewallrule -DisplayName "Exchange Port $x" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
+											New-NetFirewallrule -DisplayName "Exchange Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
+		'IIS'{foreach($x in $IIS){New-NetFirewallrule -DisplayName "IIS Port $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Allow
+											New-NetFirewallrule -DisplayName "IIS Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Allow
+											New-NetFirewallrule -DisplayName "IIS Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Allow
+											New-NetFirewallrule -DisplayName "IIS Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Allow}}
 	}
 	#Create allow rules for the installed services
-	
+
+
 }
 function FirewallInit(){	
 	Set-NetFirewallProfile -Enabled True
@@ -114,7 +122,7 @@ function FirewallInit(){
 	#80, 8080, 443, 
 	
 	$SecurityBlocks =@('3389','22','5300')
-	$SecRangeBlocks =@('1-24','26-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','993-994','996-1023','8081-49151')
+	$SecRangeBlocks =@('1-24','26-52','54-66','68-79','81-87','89-109','111-122','124-134','136-137','140-142','144-388','390-442','444','446-463','465-546','548-586','588-635','637-646','648-846','848-992','994','996-1023','8081-49151')
 	#examine notes for updated ranges
 	#1024-5000 must be open for endpoint <-> domain connection
 	
@@ -122,13 +130,23 @@ function FirewallInit(){
 								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Port $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Port $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Block}
-	foreach($x in $SecRangeBlocks){New-NetFirewallrule -DisplayName "Block Range $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
+	foreach($x in $SecRangeBlocks){
+
+		# if get-netfirewallportfilter port = array then skip rule creation
+		# if get-netfirewallportfilter port NOT array then make rules 
+		# probably second
+
+		New-NetFirewallrule -DisplayName "Block Range $x" -Direction Inbound -LocalPort $x -Protocol TCP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Range $x (UDP)" -Direction Inbound -LocalPort $x -Protocol UDP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Range $x" -Direction Outbound -LocalPort $x -Protocol TCP -Action Block
 								   New-NetFirewallrule -DisplayName "Block Range $x (UDP)" -Direction Outbound -LocalPort $x -Protocol UDP -Action Block}
 	
 # Initialize the firewall rules 
 }
+function BlockWall(){
+
+}
+#if rules don't exist create block rules 
 function LogManager(){
 	
 }
